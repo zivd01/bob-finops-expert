@@ -34,30 +34,30 @@
         <main class="main-content">
             <!-- Action buttons for interacting with the dashboard data -->
             <div class="action-bar">
-                <button class="btn btn-primary">
+                <label class="btn btn-primary" for="file-upload">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                    Upload New File
-                </button>
-                <button class="btn btn-secondary">
+                    Upload New File (CSV/JSON)
+                    <input type="file" id="file-upload" accept=".csv, .json" style="display: none;">
+                </label>
+                <button class="btn btn-secondary" id="reset-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
                     Reset UI
                 </button>
             </div>
 
-            <div class="status-chip">
-                Efficiency analysis: test_alert_from_turbonomic.json
+            <div class="status-chip" id="status-chip">
+                Waiting for data...
             </div>
 
             <div class="dashboard-card">
                 <div class="card-header">
                     <svg class="icon cloud-icon-small" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1332 20.177 10.2033 17.8687 10.0166C17.4116 6.61111 14.5024 4 11 4C7.13401 4 4 7.13401 4 11C4 11.2384 4.01183 11.4741 4.03478 11.7065C1.7854 12.3551 0 14.4756 0 17C0 19.7614 2.23858 22 5 22H17.5V19Z" fill="currentColor"/></svg>
-                    <h2>Efficiency Analysis: test_alert_from_turbonomic.json</h2>
+                    <h2 id="dashboard-title">Efficiency Analysis</h2>
                 </div>
                 
                 <!-- 
                   Gauges Grid:
                   Contains all circular metrics using HTML5 Canvas elements.
-                  Organized into a top row of large gauges and a bottom row of small gauges.
                 -->
                 <div class="gauges-grid">
                     <!-- Top Row: Large Gauges -->
@@ -66,8 +66,8 @@
                         <div class="gauge-wrapper">
                             <canvas id="gauge-savings" width="200" height="120"></canvas>
                             <div class="gauge-value">
-                                <div class="percent">~35%</div>
-                                <div class="subtext">$450/mo</div>
+                                <div class="percent" id="savings-pct">~0%</div>
+                                <div class="subtext" id="savings-usd">$0/mo</div>
                             </div>
                         </div>
                     </div>
@@ -76,8 +76,8 @@
                         <div class="gauge-wrapper">
                             <canvas id="gauge-consumption" width="200" height="120"></canvas>
                             <div class="gauge-value">
-                                <div class="percent">~12%</div>
-                                <div class="subtext"><span class="blue-text">- 12%</span> <span class="blue-light-text">- ~28%</span></div>
+                                <div class="percent" id="consumption-pct">~0%</div>
+                                <div class="subtext"><span class="blue-text">- <span id="consumption-min">0%</span></span> <span class="blue-light-text">- ~<span id="consumption-max">0%</span></span></div>
                             </div>
                         </div>
                     </div>
@@ -85,31 +85,31 @@
                     <!-- Bottom Row: Small Gauges -->
                     <div class="gauges-bottom-row">
                         <div class="gauge-container small">
-                            <h3>CPU Reservation ...</h3>
+                            <h3>CPU Reservation</h3>
                             <div class="gauge-wrapper small">
                                 <canvas id="gauge-cpu-res" width="120" height="70"></canvas>
-                                <div class="gauge-value small-val">10%</div>
+                                <div class="gauge-value small-val" id="cpu-res-val">0%</div>
                             </div>
                         </div>
                         <div class="gauge-container small">
-                            <h3>CPU Namespace Clust...</h3>
+                            <h3>CPU Utilized</h3>
                             <div class="gauge-wrapper small">
                                 <canvas id="gauge-cpu-ns" width="120" height="70"></canvas>
-                                <div class="gauge-value small-val">0%</div>
+                                <div class="gauge-value small-val" id="cpu-util-val">0%</div>
                             </div>
                         </div>
                         <div class="gauge-container small">
-                            <h3>Memory Usage Cluster</h3>
+                            <h3>Memory Cluster</h3>
                             <div class="gauge-wrapper small">
                                 <canvas id="gauge-mem-cluster" width="120" height="70"></canvas>
-                                <div class="gauge-value small-val">0%</div>
+                                <div class="gauge-value small-val" id="mem-cluster-val">0%</div>
                             </div>
                         </div>
                         <div class="gauge-container small">
-                            <h3>Memory Usage Clust...</h3>
+                            <h3>Memory Utilized</h3>
                             <div class="gauge-wrapper small">
                                 <canvas id="gauge-mem-ns" width="120" height="70"></canvas>
-                                <div class="gauge-value small-val">28%</div>
+                                <div class="gauge-value small-val" id="mem-util-val">0%</div>
                             </div>
                         </div>
                     </div>
@@ -117,57 +117,79 @@
 
                 <!-- 
                   FinOps Analysis Section:
-                  Displays expert recommendations and a Terraform code snippet 
-                  showing how to implement the suggested optimizations.
+                  Dynamically updated Deep FinOps Insights.
                 -->
-                <div class="analysis-section">
-                    <h3>FinOps & DevOps Expert Analysis</h3>
-                    <ul>
-                        <li><strong>Recommendation:</strong> Reduce CPU limit from <strong>4000m</strong> to <strong>1000m</strong> for the 'payment-gateway-prod' workload in namespace 'finance-ops' (as identified in file).</li>
-                        <li><strong>Implementation:</strong> Use the provided Terraform snippet to update the deployment specification.
-                            <pre><code># Terraform update for deployment: payment-gateway-prod
-resources {
-<span class="diff-remove">- requests = { cpu = "4000m" }</span>
-<span class="diff-add">+ requests = { cpu = "1000m" }</span>
+                <div class="analysis-section" id="analysis-section" style="display: none;">
+                    <h3>Deep FinOps Insight & Explanation</h3>
+                    
+                    <div class="insight-block">
+                        <h4>The Core Story</h4>
+                        <p id="core-story-text"></p>
+                    </div>
+
+                    <div class="insight-block">
+                        <h4>Why is this safe? (Risk Mitigation)</h4>
+                        <p id="risk-mitigation-text"></p>
+                    </div>
+
+                    <div class="insight-block alert-block">
+                        <h4>CRITICAL CONTAINER ISOLATION BOUNDARY</h4>
+                        <p><strong>This optimization modifies ONLY the container infrastructure manifest specifications (<code>requests</code> and <code>limits</code> in the deployment templates). It absolutely DOES NOT modify, touch, or alter a single line of application source code inside the containers.</strong></p>
+                    </div>
+
+                    <div class="insight-block">
+                        <h4>Infrastructure as Code (IaC) Matching Plan</h4>
+                        <p>To safely apply this optimization, update your Terraform configuration as shown below:</p>
+                        <pre><code># Container Resource Specification Update for k3s Deployment
+resource "kubernetes_deployment" "k3s_optimized_workload" {
+  spec {
+    template {
+      spec {
+        container {
+          name = "<span id="tf-workload-name">container-name</span>"
+          resources {
+<span class="diff-remove">-           requests = { cpu = "<span id="tf-old-cpu">0m</span>", memory = "<span id="tf-old-mem">0Gi</span>" }</span>
+<span class="diff-add">+           requests = { cpu = "<span id="tf-new-cpu">0m</span>", memory = "<span id="tf-new-mem">0Gi</span>" }</span>
+          }
+        }
+      }
+    }
+  }
 }</code></pre>
-                        </li>
-                        <li><strong>Performance Impact:</strong> The proposed reduction is safe and will not impact latency or throughput. Continuous peak usage analysis shows peaks do not exceed 12% of the current limit, providing ample overhead at the new level.</li>
-                    </ul>
+                    </div>
+                    <div class="insight-block">
+                        <h4>Export & Share Report</h4>
+                        <p>Distribute the optimization details to your engineering team:</p>
+                        <div class="share-buttons">
+                            <button class="btn btn-secondary" id="share-email-btn">✉️ Share via Email</button>
+                            <button class="btn btn-secondary" id="share-slack-btn">💬 Copy for Slack</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
 
         <!-- 
           Right Sidebar (Chat Interface):
-          A mock chat UI for querying the FinOps assistant.
         -->
         <aside class="right-sidebar">
             <div class="chat-header">
-                <span class="chat-title">Cromp...</span>
+                <span class="chat-title">Bob FinOps AI</span>
                 <div class="chat-actions">
                     <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
-                    <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-                    <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
                 </div>
             </div>
             
-            <div class="chat-messages">
-                <div class="message user-message">
-                    User project ideas<br>
-                    How canwmers about project ideas from image_41552f.jpg
-                </div>
+            <div class="chat-messages" id="chat-messages">
                 <div class="message ai-message">
-                    Recommendation: Reduce CPU limit from 4000m to 1000m for the 'payment-gateway-prod' workload in namespace 'finance-ops' (as identified in file).
-                    <br><br>
-                    Implementation: Use the provided Terraform snippet to update the deployment specification.
+                    Hello! I'm Bob, your FinOps architect. Upload a Cloudability JSON or Turbonomic CSV file to get started.
                 </div>
             </div>
 
             <div class="chat-input-area">
                 <div class="chat-input-wrapper">
-                    <svg class="attachment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                    <input type="text" placeholder="Type your message...">
-                    <button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+                    <input type="text" id="chat-input" placeholder="Type your message...">
+                    <button class="send-btn" id="chat-send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
                 </div>
             </div>
         </aside>

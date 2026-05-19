@@ -4,7 +4,8 @@
 # We use the official lightweight Nginx image based on Alpine Linux.
 # Alpine is chosen for its extremely small footprint, reducing the 
 # attack surface and saving storage space/bandwidth.
-FROM nginx:alpine
+# FINOPS OPTIMIZATION: Switched to 'alpine-slim' to further reduce memory and storage costs.
+FROM nginx:alpine-slim
 
 # The default directory where Nginx serves static files is /usr/share/nginx/html.
 # We copy our three frontend files directly into this directory.

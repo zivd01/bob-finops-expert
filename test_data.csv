@@ -1,0 +1,3 @@
+workload,savings,cpu_limit,cpu_request,mem_limit,mem_request
+test-workload-api,550.25,2000m,500m,4Gi,1Gi
+test-workload-worker,120.00,1000m,250m,2Gi,512Mi
