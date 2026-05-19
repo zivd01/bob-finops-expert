@@ -1,0 +1,57 @@
+# ---------------------------------------------------------
+# Deployment for the FinOps Dashboard
+# ---------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finops-dashboard
+  namespace: default
+  labels:
+    app: finops-dashboard
+spec:
+  # Only one replica is needed for this lightweight static UI
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finops-dashboard
+  template:
+    metadata:
+      labels:
+        app: finops-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        # This assumes the image is built locally. If pushing to a registry, 
+        # update this to e.g., myregistry.com/finops-dashboard:latest
+        image: finops-dashboard:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        # Resource limits strictly defined to follow FinOps best practices
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+---
+# ---------------------------------------------------------
+# Service to expose the Dashboard outside the cluster
+# ---------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: finops-dashboard-svc
+  namespace: default
+spec:
+  # Target the deployment pods using the label
+  selector:
+    app: finops-dashboard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  # Using NodePort to make it easily accessible without an Ingress controller.
+  # k3s will automatically allocate a port in the 30000-32767 range.
+  type: NodePort

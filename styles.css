@@ -1,0 +1,424 @@
+:root {
+    --primary-blue: #3b82f6;
+    --primary-blue-hover: #2563eb;
+    --secondary-gray: #e5e7eb;
+    --secondary-gray-hover: #d1d5db;
+    --bg-light: #f3f4f6;
+    --bg-white: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --header-bg: #dbeafe;
+    
+    /* Gauge Colors */
+    --gauge-green: #22c55e;
+    --gauge-red: #ef4444;
+    --gauge-blue: #3b82f6;
+    --gauge-bg: #f3f4f6;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Header */
+.app-header {
+    background-color: var(--header-bg);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    margin: 4px 4px 0 4px;
+}
+
+.header-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cloud-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--primary-blue);
+}
+
+/* Layout */
+.app-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    margin: 0 4px 4px 4px;
+    background-color: var(--bg-white);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Left Sidebar */
+.left-sidebar {
+    width: 60px;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 16px;
+    gap: 20px;
+}
+
+.nav-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-icon svg { width: 20px; height: 20px; }
+.nav-icon:hover { background-color: var(--bg-light); color: var(--primary-blue); }
+.nav-icon.active { background-color: #eff6ff; color: var(--primary-blue); }
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    background-color: #fafafa;
+}
+
+.action-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    flex: 1;
+    max-width: 300px;
+    transition: background-color 0.2s;
+}
+
+.btn svg { width: 18px; height: 18px; }
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+}
+.btn-primary:hover { background-color: var(--primary-blue-hover); }
+
+.btn-secondary {
+    background-color: var(--secondary-gray);
+    color: var(--text-main);
+}
+.btn-secondary:hover { background-color: var(--secondary-gray-hover); }
+
+.status-chip {
+    display: inline-block;
+    background-color: #dbeafe;
+    color: var(--text-main);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+    margin-left: auto;
+    float: right;
+}
+
+/* Dashboard Card */
+.dashboard-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    clear: both;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.cloud-icon-small {
+    width: 28px;
+    height: 28px;
+    color: #93c5fd;
+    background: #eff6ff;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Gauges Grid */
+.gauges-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.gauge-container {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gauge-container h3 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--text-main);
+}
+
+.gauge-container.large {
+    flex: 1;
+}
+
+.gauges-grid > div:first-child, .gauges-grid > div:nth-child(2) {
+    display: inline-flex;
+    width: calc(50% - 10px);
+    float: left;
+    margin-right: 20px;
+}
+.gauges-grid > div:nth-child(2) { margin-right: 0; float: right; }
+
+.gauges-bottom-row {
+    clear: both;
+    display: flex;
+    gap: 20px;
+}
+
+.gauge-container.small {
+    flex: 1;
+}
+
+/* Gauge Wrapper Styles */
+.gauge-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.gauge-wrapper canvas {
+    display: block;
+}
+
+.gauge-value {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+}
+
+.percent {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.subtext {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.blue-text { color: var(--primary-blue); font-weight: 600; }
+.blue-light-text { color: #60a5fa; }
+
+.small-val {
+    font-size: 1.2rem;
+    font-weight: 600;
+    bottom: -5px;
+}
+
+/* Analysis Section */
+.analysis-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+}
+
+.analysis-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+
+.analysis-section ul {
+    list-style-type: none;
+    padding-left: 12px;
+}
+
+.analysis-section li {
+    position: relative;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.analysis-section li::before {
+    content: "•";
+    position: absolute;
+    left: -12px;
+    font-weight: bold;
+}
+
+pre {
+    background-color: var(--bg-light);
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+.diff-remove { color: var(--gauge-red); }
+.diff-add { color: var(--gauge-green); }
+
+/* Right Sidebar (Chat) */
+.right-sidebar {
+    width: 320px;
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-white);
+}
+
+.chat-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-title {
+    font-weight: 600;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    background: #9ca3af;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.icon-btn svg { width: 16px; height: 16px; }
+
+.chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.message {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.user-message {
+    background-color: #eff6ff;
+    color: var(--text-main);
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.ai-message {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.chat-input-area {
+    padding: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 8px 16px;
+    gap: 8px;
+}
+
+.chat-input-wrapper input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.attachment-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.send-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+.send-btn svg { width: 20px; height: 20px; }

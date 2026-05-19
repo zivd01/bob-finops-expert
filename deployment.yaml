@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k3s-rhel-9-7-backend
+  namespace: production
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: app-container
+        image: nginx:alpine # Replace with your actual image, e.g., registry.internal/backend:v2.4.1
+        ports:
+        - containerPort: 80
+        # These are the optimized resource limits recommended by the FinOps analysis
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
